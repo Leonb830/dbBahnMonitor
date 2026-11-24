@@ -1,0 +1,9 @@
+# Only needed on networks that inspect HTTPS traffic (e.g. Zscaler): the
+# container must trust the same root certificate as the host.
+# Copy to docker-compose.override.yml and set the path to your certificate.
+services:
+  bahnhof-live:
+    environment:
+      NODE_EXTRA_CA_CERTS: /etc/ssl/certs/extra-root.crt
+    volumes:
+      - /path/to/your-root-certificate.crt:/etc/ssl/certs/extra-root.crt:ro

@@ -1,0 +1,11 @@
+services:
+  bahnhof-live:
+    build: .
+    # Only reachable from this machine. Another port: APP_PORT=9000 docker compose up -d
+    ports:
+      - "127.0.0.1:${APP_PORT:-8000}:8000"
+    # Optional DB API keys (DB_CLIENT_ID, DB_API_KEY); without them the keyless DB feed is used.
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped

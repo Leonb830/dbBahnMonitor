@@ -1,0 +1,359 @@
+:root {
+  --bg: #0b0f1c;
+  --panel: #131a2e;
+  --board: #0a1e6e;
+  --board-line: #1d3391;
+  --text: #f2f4fa;
+  --muted: #a9b6e6;
+  --red: #ec0016;
+  --late: #ff8a7a;
+  --ok: #7be39a;
+  --amber: #ffb000;
+  /* everything below the map scales with the screen height */
+  --u: clamp(9px, 1.6vh, 24px);
+  font-family: ui-monospace, 'Cascadia Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--u);
+}
+
+/* The map spans the full width and the top half of the screen, the board the bottom half. */
+main {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 50vh minmax(0, 1fr);
+}
+
+.map-frame {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  background: #000;
+  line-height: 0;
+}
+
+#map {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* never distort: if the shapes ever differ, crop instead of stretching */
+  object-fit: cover;
+}
+
+.compass {
+  position: absolute;
+  top: 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  padding: 0.2rem 0.6rem;
+  background: rgba(5, 8, 20, 0.7);
+  border-radius: 3px;
+}
+
+.compass.left {
+  left: 0.6rem;
+}
+
+.compass.right {
+  right: 0.6rem;
+}
+
+aside {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--board);
+  border-top: 4px solid #05103f;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  background: #05103f;
+}
+
+.brand,
+.controls,
+.now {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.logo {
+  border: 3px solid var(--red);
+  color: var(--red);
+  background: #fff;
+  font-weight: 800;
+  font-size: 1.3rem;
+  padding: 0 0.4rem;
+  border-radius: 5px;
+  letter-spacing: 1px;
+}
+
+select,
+button {
+  font: inherit;
+  color: var(--text);
+  background: var(--panel);
+  border: 2px solid #2a3558;
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+select {
+  font-size: 1.25rem;
+  font-weight: 700;
+  min-width: 0;
+}
+
+button:hover {
+  border-color: #50609a;
+}
+
+button.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+#live.active {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+}
+
+.note {
+  color: var(--ok);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.note.mock {
+  color: var(--amber);
+}
+
+.now {
+  gap: 1rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+#clock {
+  color: var(--amber);
+  font-size: 2rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* five trains side by side */
+.board {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  overflow: hidden;
+}
+
+.row {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'line status'
+    'dest dest'
+    'track times';
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  gap: 0.8rem 1rem;
+  padding: 1.2rem 1.4rem;
+  border-left: 2px solid var(--board-line);
+  overflow: hidden;
+}
+
+.row:first-child {
+  border-left: 0;
+}
+
+.row.empty {
+  display: block;
+  grid-column: 1 / -1;
+  color: var(--muted);
+}
+
+.row.boarding,
+.row.arriving,
+.row.departing {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 80%);
+}
+
+.line {
+  grid-area: line;
+  justify-self: start;
+  min-width: 4.4rem;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.5rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 4px;
+  background: #5b6478;
+}
+
+.line.sbahn {
+  background: #00843d;
+  border-radius: 999px;
+}
+
+.status {
+  grid-area: status;
+  text-align: right;
+  min-width: 0;
+}
+
+.eta {
+  font-size: 2rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.15rem 0.7rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #0b0f1c;
+  background: var(--amber);
+  white-space: nowrap;
+}
+
+.chip.boarding {
+  background: var(--ok);
+}
+
+.chip.departing {
+  background: #fff;
+}
+
+.dest {
+  grid-area: dest;
+  align-self: center;
+  font-size: clamp(1.4rem, 1.7vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  overflow: hidden;
+}
+
+.sub {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status .sub {
+  white-space: nowrap;
+}
+
+.track {
+  grid-area: track;
+  align-self: end;
+  font-size: 2.6rem;
+  line-height: 1;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.times {
+  grid-area: times;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.t {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  white-space: nowrap;
+}
+
+i {
+  font-style: normal;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-right: 0.2rem;
+}
+
+s {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.late {
+  color: var(--late);
+  font-weight: 700;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+/* Upright or narrow screens: trains as a list instead of side by side. */
+@media (max-aspect-ratio: 13/10) {
+  .board {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
+  }
+
+  .row {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: 'line dest track status' 'line dest times times';
+    grid-template-rows: auto auto;
+    padding: 0.4rem 1.2rem;
+    gap: 0.2rem 1rem;
+    border-left: 0;
+    border-top: 2px solid var(--board-line);
+  }
+
+  .times {
+    flex-direction: row;
+    gap: 1.2rem;
+  }
+
+  .track {
+    font-size: 1.6rem;
+  }
+
+  header {
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+}

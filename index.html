@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bahnhof Live – Bad Homburg</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <div class="map-frame">
+        <canvas id="map" aria-label="Pixel map of Bad Homburg station"></canvas>
+        <span class="compass left">← Oberursel · Frankfurt</span>
+        <span class="compass right">Friedrichsdorf · Usingen →</span>
+      </div>
+
+      <aside>
+        <header>
+          <div class="brand">
+            <span class="logo">DB</span>
+            <select id="station" aria-label="Station">
+              <option value="bad-homburg">Bad Homburg</option>
+              <option disabled>More stations soon</option>
+            </select>
+            <span id="source" class="note"></span>
+          </div>
+          <div class="controls">
+            <button id="live" title="Back to the real time">● Live</button>
+            <button data-speed="1">1×</button>
+            <button data-speed="10">10×</button>
+            <button data-speed="60">60×</button>
+            <button id="skip" title="Jump to just before the next arrival">Next ⏭</button>
+          </div>
+          <div class="now">
+            <span id="date"></span>
+            <span id="clock">--:--:--</span>
+          </div>
+        </header>
+
+        <section class="board" id="board-rows" aria-label="Next trains"></section>
+      </aside>
+    </main>
+
+    <script src="js/data.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

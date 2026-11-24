@@ -1,0 +1,4 @@
+.env
+node_modules/
+# machine-specific (local certificate path); see docker-compose.override.example.yml
+docker-compose.override.yml
